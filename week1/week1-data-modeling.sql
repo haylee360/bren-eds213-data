@@ -42,17 +42,17 @@ SELECT * FROM read_csv_auto('ASDN_csv/personnel.csv');
 
 
 CREATE TABLE Snow_survey (
-    Site TEXT ,
-    Year DATE, -- Or should this be integer?
-    "Date" DATE,
+    Site TEXT NOT NULL,
+    Year DATE NOT NULL, -- Or should this be integer?
+    "Date" DATE NOT NULL,
     Plot TEXT,
-    Location TEXT,
-    Snow_cover REAL,
-    Water_cover REAL,
-    Land_cover REAL,
-    Total_cover REAL,
-    Observer TEXT ,
-    Notes TEXT NULL, -- IDK how to demarcate when it's okay for null values 
+    Location TEXT NOT NULL,
+    Snow_cover REAL NOT NULL,
+    Water_cover REAL NOT NULL,
+    Land_cover REAL NOT NULL,
+    Total_cover REAL NOT NULL,
+    Observer TEXT NOT NULL,
+    Notes TEXT, -- IDK how to demarcate when it's okay for null values 
 );
 -- Insert data from CSV
 INSERT INTO Snow_survey
