@@ -1,4 +1,5 @@
-CREATE TABLE Species (
+CREATE TABLE Species
+(
     Code TEXT PRIMARY KEY,
     Common_name TEXT UNIQUE NOT NULL,
     Scientific_name TEXT,
@@ -7,9 +8,11 @@ CREATE TABLE Species (
 
 -- Insert data from CSV
 INSERT INTO Species
-SELECT * FROM read_csv_auto('ASDN_csv/species.csv');
+SELECT *
+FROM read_csv_auto('ASDN_csv/species.csv');
 
-CREATE TABLE Site (
+CREATE TABLE Site
+(
     Code TEXT PRIMARY KEY,
     Site_name TEXT UNIQUE NOT NULL,
     Location TEXT NOT NULL,
@@ -21,29 +24,35 @@ CREATE TABLE Site (
 );
 -- Insert data from CSV
 INSERT INTO Site
-SELECT * FROM read_csv_auto('ASDN_csv/site.csv');
+SELECT *
+FROM read_csv_auto('ASDN_csv/site.csv');
 
-CREATE TABLE Color_band_code (
+CREATE TABLE Color_band_code
+(
     Code TEXT PRIMARY KEY,
     Color TEXT NOT NULL UNIQUE
 );
 -- Insert data from CSV
 INSERT INTO Color_band_code
-SELECT * FROM read_csv_auto('ASDN_csv/color_band_code.csv');
+SELECT *
+FROM read_csv_auto('ASDN_csv/color_band_code.csv');
 
 
-CREATE TABLE Personnel (
+CREATE TABLE Personnel
+(
     Abbreviation TEXT PRIMARY KEY,
     Name TEXT NOT NULL UNIQUE
 );
 -- Insert data from CSV
 INSERT INTO Personnel
-SELECT * FROM read_csv_auto('ASDN_csv/personnel.csv');
+SELECT *
+FROM read_csv_auto('ASDN_csv/personnel.csv');
 
 
-CREATE TABLE Snow_survey (
+CREATE TABLE Snow_survey
+(
     Site TEXT NOT NULL,
-    Year DATE NOT NULL, -- Or should this be integer?
+    Year DATE NOT NULL,
     "Date" DATE NOT NULL,
     Plot TEXT,
     Location TEXT NOT NULL,
@@ -52,8 +61,9 @@ CREATE TABLE Snow_survey (
     Land_cover REAL NOT NULL,
     Total_cover REAL NOT NULL,
     Observer TEXT NOT NULL,
-    Notes TEXT, -- IDK how to demarcate when it's okay for null values 
+    Notes TEXT,
 );
 -- Insert data from CSV
 INSERT INTO Snow_survey
-SELECT * FROM read_csv_auto('ASDN_csv/ASDN_Snow_survey.csv');
+SELECT *
+FROM read_csv_auto('ASDN_csv/ASDN_Snow_survey.csv');
