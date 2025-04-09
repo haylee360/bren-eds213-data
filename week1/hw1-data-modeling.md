@@ -24,36 +24,10 @@ CREATE TABLE Snow_survey (
 
 **Explanation**:
 
-- I chose to make every variable `NOT NULL` except for `Plot` and `Notes`. Most of the `Notes` columnd is empty, it seems the observers rarely had notes to add. The plot column 
+- I chose to make every variable `NOT NULL` except for and `Notes`. Most of the `Notes` columnd is empty, it seems the observers rarely had notes to add. 
+- I identified the primary key as a combination of `Site` `Date` and `Plot`. This seemed to be the minimum number of variables to have a unique identifier for each observation. 
+- I also identified two foreign keys of `Site` for referencing the Site's dataframe `code` and `Observer` for referencing the Personnel's dataframe `abbreviation`.
+- I added a check constraint to ensure that the `Snow_cover`, `Water_cover`, and `Land_cover` columns are all between 0 and 100. I also added a check constraint to ensure that the `Total_cover` column is equal to the sum of the other three columns.
 
-Snow_survey
 
-Periodic records of snow cover remaining at the site
-
-Column name	Definition
-Site	Four-letter code of site at which data were collected
-Year	Year in which data were collected
-Date	Date on which data were collected
-Plot	Name of study plot on which survey was conducted
-Location	Name of dedicated snow-survey location, if applicable
-Snow_cover	Percent cover of snow, including slush
-Water_cover	Percent cover of water
-Land_cover	Percent cover of exposed land
-Total_cover	Total sum (to check the above percents; should always sum to 100)
-Observer	Person who conducted the survey
-Notes	Any relevant comments on the survey
-
-Please consider:
-
-the data types of columns (pick from TEXT, REAL, INTEGER, DATE for this exercise)
-if the table has a primary key and what it might be
-any foreign key(s)
-whether NULL values are allowed
-uniqueness constraints, on individual columns and across columns
-other column value constraints, again, on individual columns and across columns
-You may (or may not) want to take advantage of the Species, Site, Color_band_code, and Personnel supporting tables. These are also documented in the metadata, and SQL table definitions for them have already been created and are included below.
-
-Please express your table definition in SQL, but don’t worry about getting the SQL syntax exactly correct. This assignment is just a thought exercise. If you do want to try to write correct SQL, though, your may find it helpful to consult the DuckDB CREATE TABLE documentation.
-
-Finally, please provide some explanation for why you made the choices you did, and any questions or uncertainties you have. Don’t write an essay! Bullet points are sufficient. But do please explain your thought process.
 
