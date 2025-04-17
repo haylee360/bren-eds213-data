@@ -100,3 +100,36 @@ SELECT * FROM Personnel;
 SELECT * FROM Camp_assignment JOIN Personnel
     ON Observer = Abbreviation
     LIMIT 10;
+
+-- What happens?
+SELECT * FROM Camp_assignment CROSS JOIN Personnel;
+
+-- You may need to qualify column names
+SELECT * FROM Camp_assignment JOIN Personnel
+    ON Camp_assignment.Observer = Personnel.Abbreviation
+    LIMIT 10;
+
+-- Another way is to use aliases
+SELECT * FROM Camp_assignment AS CA JOIN Personnel AS P
+    ON CA.Observer = P.Abbreviation
+    LIMIT 10;
+
+-- Relational algebra and nested queries and subqueries
+SELECT COUNT(*) FROM Bird_nests;
+-- The result of a query is always another table
+SELECT COUNT(*) FROM (SELECT COUNT(*) FROM Bird_nests);
+-- How many rows are from this new table? only one
+-- Create temporary tables 
+CREATE TEMP TABLE nest_count AS SELECT COUNT(*) FROM Bird_nests;
+.table
+SELECT * FROM nest_count;
+-- Temp table will disappear when you close duckdb. If you leave out temp, it will be permanent
+DROP TABLE nest_count;
+-- Another place to nest queries is IN clauses
+SELECT Observer FROM Bird_nests;
+SELECT * FROM Personnel ORDER BY Abbreviation;
+SELECT * FROM Bird_nests
+    WHERE Observer IN (
+        SELECT Abbreviation FROM Personnel
+            WHERE Abbreviation LIKE 'a%'
+    );
