@@ -16,6 +16,7 @@ SELECT AVG(my_col) FROM mytable;
 -- The results of this little experiment tell us that the average function does indeed ignore NULL values in its calculation
 
 -- Part 2
+
 SELECT SUM(my_col)/COUNT(*) FROM mytable;
 -- Gives 2.2
 SELECT SUM(my_col)/COUNT(my_col) FROM mytable;
