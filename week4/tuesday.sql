@@ -63,3 +63,86 @@ SELECT Nest_ID, COUNT(*) AS Num_eggs
     USING (Nest_ID)
     WHERE Nest_ID LIKE '13B%'
     GROUP BY Nest_ID;
+
+-- Let's add in the observer
+SELECT Nest_ID, Observer, COUNT(*) AS Num_eggs
+    FROM Bird_nests JOIN Bird_eggs
+    USING (Nest_ID)
+    WHERE Nest_ID LIKE '13B%'
+    GROUP BY Nest_ID;
+-- This throws a group by error for observer
+-- we grouped by nest id which is the primary key
+-- There can only be one value for observer because! nest id is the primary key
+-- Other database systems are smart enough to recognize that, but not duckdb
+
+SELECT * FROM Bird_nests JOIN Bird_eggs
+    USING (Nest_ID)
+    WHERE Nest_ID LIKE '13B%';
+
+-- DuckDB solution #1
+SELECT Nest_ID, Observer, COUNT(*) AS Num_eggs
+    FROM Bird_nests JOIN Bird_eggs
+    USING (Nest_ID)
+    WHERE Nest_ID LIKE '13B%'
+    GROUP BY Nest_ID, Observer;
+
+-- DuckDB solution #2
+SELECT Nest_ID, ANY_VALUE(Observer) AS Observer, COUNT(*) AS Num_eggs
+    FROM Bird_nests JOIN Bird_eggs
+    USING (Nest_ID)
+    WHERE Nest_ID LIKE '13B%'
+    GROUP BY Nest_ID;
+-- pick any value for observer (because they're all the same)
+
+-- Views: a virtual table
+CREATE VIEW my_nests AS 
+    SELECT Nest_ID, ANY_VALUE(Observer) AS Observer, COUNT(*) AS Num_eggs
+    FROM Bird_nests JOIN Bird_eggs
+    USING (Nest_ID)
+    WHERE Nest_ID LIKE '13B%'
+    GROUP BY Nest_ID;
+
+.tables
+SELECT * FROM my_nests;
+SELECT Nest_ID, Name, Num_eggs
+    FROM my_nests JOIN Personnel
+    ON Observer = Abbreviation;
+
+-- view
+-- temp table
+-- What's the difference?
+CREATE TEMP TABLE my_nests_temp_table AS 
+    SELECT Nest_ID, ANY_VALUE(Observer) AS Observer, COUNT(*) AS Num_eggs
+    FROM Bird_nests JOIN Bird_eggs
+    USING (Nest_ID)
+    WHERE Nest_ID LIKE '13B%'
+    GROUP BY Nest_ID;
+.table
+
+-- temp table: the database actually constructs the table. 
+-- A view is always virtual. Executed dynamically everyone it gets called? Or when the source tables get changed. So if you change a table it's based on, the view will update. A temp table won't, it's more static. 
+
+-- What about modifications (updates, inserts, deletes) on a view? possible?
+-- it depends on how smart the datbase is, also whether it's theoretically possible. 
+
+-- Last topic: set operations
+-- UNION, UNION ALL, INTERSECT, EXCEPT
+-- UNION removes duplicates, union all wont. intersect and except are like set differences
+-- Mathematically, a table is a set of tuples. 
+
+SELECT * FROM Bird_eggs LIMIT 5;
+
+
+SELECT Book_page, Year, Site, Nest_ID, Egg_num, Length*25.4 AS LENGTH, Width*25.4 AS Width
+    FROM Bird_eggs
+    WHERE Book_page LIKE 'b14%'
+UNION
+SELECT Book_page, Year, Site, Nest_ID, Egg_num, Length, Width
+    FROM Bird_eggs
+    WHERE Book_page NOT LIKE 'b14%';
+
+-- Method 3 for running example
+-- What species aren't in bird nest table
+SELECT Code FROM Species
+EXCEPT
+SELECT DISTINCT Species FROM Bird_nests;
