@@ -1,0 +1,1 @@
+-- Views are often useful when you need a "function". For example, if you need to do a join over and over again, you might as well just use a view. 
