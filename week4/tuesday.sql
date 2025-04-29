@@ -40,7 +40,7 @@ SELECT * FROM a JOIN b ON a.common = b.common;
 -- By doing an outer join, either left or right, we'll add certain missing rows
 SELECT * FROM a LEFT JOIN b ON a.common = b.common;
 
--- a running example, what speces do NOT have any nest data
+-- a running example, what specIes do NOT have any nest data
 SELECT COUNT(*) FROM Species;
 SELECT COUNT(DISTINCT Species) FROM Bird_nests;
 -- Method 1
