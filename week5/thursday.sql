@@ -8,7 +8,7 @@ SELECT * FROM Species;
 INSERT INTO Species VALUES ('abcd', 'thing1', '', 'Study Species');
 SELECT * FROM Species;
 
--- Time to create trigger
+-- Time to create trigger  
 CREATE TRIGGER Fix_up_species 
 AFTER INSERT ON Species
 FOR EACH ROW BEGIN
