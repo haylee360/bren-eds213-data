@@ -1,0 +1,98 @@
+---
+title: "thursday"
+format: html
+---
+
+```{r}
+library(tidyverse)
+library(DBI)
+library(duckdb)
+
+```
+
+Let's connect to our database
+```{r}
+conn <- DBI::dbConnect(duckdb::duckdb(), dbdir="../database/database.db")
+```
+
+```{r}
+DBI::dbListTables(conn)
+```
+
+```{r}
+species <- tbl(conn, "Species")
+species
+```
+
+## First query
+
+```{r}
+# Use single quotes for single quotes within. Double quotes for entire thing
+species_a <- dbGetQuery(conn, "SELECT * FROM Species WHERE Code LIKE '%a'")
+
+```
+
+```{r}
+library(dbplyr)
+```
+
+```{r}
+# dbplyr transforms tidyverse code in SQL for you
+species %>% 
+  filter(Relevance == "Study species") %>% 
+  select(Code, Scientific_name) %>% 
+  show_query()
+```
+```{r}
+species_study <- species %>% 
+  filter(Relevance == "Study species") %>% 
+  select(Code, Scientific_name)
+```
+Let the database engine do some work for you, and only work with the data you need inside the R environment. Lazy dataframe, can do a lot of things on them as if they were a real dataframe. 
+
+```{r}
+class(species_study)
+dim(species_study)  # gives NA for rows, but has columns
+```
+
+```{r}
+species %>% 
+  group_by(Relevance) %>% 
+  summarise(num_species = n()) %>% 
+  show_query()
+```
+
+### You can also mutate
+
+```{r}
+species %>% 
+  mutate(Code_x = paste0("X", Code)) %>% 
+  show_query()
+```
+dbplyr is read only, no writing. Can't add columns to actual database itself.
+
+### How do we get the full data?
+
+```{r}
+species_X <- species %>% 
+  mutate(Code_x = paste0("X", Code)) %>% 
+  collect()
+```
+### Joins
+
+```{r}
+eggs_db <- tbl(conn, "Bird_eggs")
+nests_db <- tbl(conn, "Bird_nests")
+
+```
+
+```{r}
+nest_eggs_df <- left_join(nests_db, eggs_db, by = "Nest_ID", keep = FALSE) %>% 
+  collect()
+```
+## Don't forget to close the connection for lock file issues
+
+```{r}
+DBI::dbDisconnect(conn, shutdown = TRUE)
+```
+
