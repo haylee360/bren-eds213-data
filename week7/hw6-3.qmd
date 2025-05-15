@@ -13,29 +13,54 @@ library(dbplyr)
 library(tidyverse)
 library(DBI)
 library(duckdb)
+library(here)
 ```
 
 ```{r}
-conn <- DBI::dbConnect(duckdb(), dbdir = "database/database.db")
+# Create database connection
+conn <- DBI::dbConnect(duckdb::duckdb(), dbdir = here("database", "database.db"))
 ```
 
 ```{r}
+# View tables
 DBI::dbListTables(conn)
 ```
 
 ```{r}
+# Read in all the necessary tables
 personnel <- tbl(conn, "Personnel")
-personnel
-
 bird_eggs <- tbl(conn, "Bird_eggs")
-bird_eggs
-
 camp_assignment <- tbl(conn, "Camp_assignment")
-camp_assignment
-
 site <- tbl(conn, "Site")
-site
-
 bird_nests <- tbl(conn, "Bird_nests")
-bird_nests
 ```
+
+```{r}
+# Find the winners
+winners <- bird_eggs %>%
+  left_join(bird_nests, by = c("Year" = "Year", 
+                               "Site" = "Site", 
+                               "Nest_ID" = "Nest_ID")) %>%
+  left_join(personnel, by = c("Observer" = "Abbreviation")) %>% 
+  group_by(Name) %>% 
+  summarize(total_eggs = n()) %>% 
+  arrange(desc(total_eggs)) %>% 
+  head(3)
+```
+
+```{r}
+# View the results
+winner_results <- winners %>% 
+  collect()
+winner_results
+```
+
+
+```{r}
+# View the underlying query
+winners %>% 
+  show_query()
+```
+
+I did not use multiple R statements, so the underlying query has no temp table. The results were limited to the first three rows using `LIMIT`.  
+
