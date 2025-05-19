@@ -26,8 +26,8 @@ done
 # get current time
 end_time=$(date +%s)
 
-# compute elapsed time
-elapsed_time=$((start_time - end_time)) 
+# Fixed time calculation!
+elapsed_time=$((end_time - start_time)) 
 
 # divide elapsed time by num_reps
 avg_time=$(python -c "print($elapsed_time / $num_reps)")
@@ -37,5 +37,8 @@ echo "$label,$num_reps,$elapsed_time,$avg_time" >> "$csv_file"
 
 ## Part 2
 # I started with 100 repetitions which gave me the same time for each method.
-# So, I upped it to 1000 repetitions, and that revealed that outer_join was fastest with a time of 0.35s 
-# compared to 0.39 for subquery and 0.41 for except.
+
+## NOTE: Before, I had forgotten to add another 0 in the decimal place when reporting my answer, that was my mistake!! I also fixed the time so I'm not getting negative numbers anymore. 
+
+# So, I upped it to 1000 repetitions, and that revealed that outer_join was fastest with a time of 0.035s 
+# compared to 0.039 for subquery and 0.042 for except.
