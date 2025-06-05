@@ -1,11 +1,16 @@
 query, reps, total_time, time_per_rep, distinct_values
-control,10,21,2.1,N/A
 control,10,25,2.5,N/A
-
-site,10,24,2.4,16
 site,100,20,0.2,16
 species,100,7,0.07,99
 year,100,8,0.08,66
 observer,1000,35,0.035,269
 age_method,10,10,1.0,3
 site_species,1000,14,0.014,1584
+site_observer,1000,10,0.01,4304
+species_observer,1000,6,0.006,26631
+year_observer,1000,6,0.006,17754
+observer_agemethod,1000,20,0.02,807
+site_species_observer,1000,5,0.005,422204
+year_observer_agemethod,1000,6,0.006,53262
+site_species_observer_year,10000,56,0.0056,1930842
+species_observer_year_agemethod,1000,5,0.005,1664621
