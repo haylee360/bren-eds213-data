@@ -20,7 +20,7 @@ fi
 if [ -n "$num_values_query" ]; then
     num_distinct_values=$(sqlite3 -csv "$sql_file" "$num_values_query")
 else
-    num_distinct_values="N/A"
+    num_distinct_values=1
 fi
 
 # Automate the number of repetitions

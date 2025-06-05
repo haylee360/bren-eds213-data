@@ -1,5 +1,5 @@
 query, reps, total_time, time_per_rep, distinct_values
-control,10,25,2.5,N/A
+control,10,25,2.5,1
 site,100,20,0.2,16
 species,100,7,0.07,99
 year,100,8,0.08,66
