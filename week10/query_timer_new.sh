@@ -2,7 +2,7 @@
 
 label=$1
 query=$2
-db_file=$3
+sql_file=$3
 csv_file=$4
 index_columns=$5       
 num_values_query=$6           
@@ -10,21 +10,17 @@ num_values_query=$6
 # Create index name from label
 index_name="idx_${label//[^a-zA-Z0-9]/_}"
 
-# Create index (if columns were passed)
+# Create index if given index columns
 if [ -n "$index_columns" ]; then
-    echo "Creating index on column(s): $index_columns"
-    sqlite3 "$db_file" "CREATE INDEX IF NOT EXISTS $index_name ON my_table($index_columns);"
+    echo "Creating index on column(s): $index_columns" sqlite3 "$db_file" "CREATE INDEX IF NOT EXISTS $index_name ON Bird_nests($index_columns);"
 fi
 
 # Get number of distinct values
 if [ -n "$num_values_query" ]; then
-    num_values=$(sqlite3 -csv "$db_file" "$num_values_query")
+    num_distinct_values=$(sqlite3 -csv "$db_file" "$num_values_query")
 else
-    num_values="N/A"
+    num_distinct_values="N/A"
 fi
-
-# Get start time
-start_time=$(date +%s)
 
 # Automate the number of repetitions
 num_reps=1
@@ -41,9 +37,12 @@ while true; do
     num_reps=$((num_reps * 10))
 done
 
+# Get start time
+start_time=$(date +%s)
+
 # Run timing loop with DuckDB
 for ((i = 1; i <= num_reps; i++)); do
-    duckdb "$db_file" "$query" > /dev/null
+    sqlite3 "$db_file" "$query" > /dev/null
 done
 
 end_time=$(date +%s)
@@ -51,7 +50,7 @@ elapsed_time=$((end_time - start_time))
 avg_time=$(python -c "print(round($elapsed_time / $num_reps, 6))")
 
 # Output to CSV
-echo "$label,$num_reps,$elapsed_time,$avg_time,$num_values" >> "$csv_file"
+echo "$label,$num_reps,$elapsed_time,$avg_time,$num_distinct_values" >> "$csv_file"
 
 # Drop index if it was created
 if [ -n "$index_columns" ]; then
